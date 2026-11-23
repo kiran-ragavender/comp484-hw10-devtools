@@ -141,7 +141,9 @@ function clickedExerciseButton() {
 // "Bulk treats" box (in the DevTools Lab panel). Each treat adds 1 pound, 5 happiness,
 // and takes away 5 hunger.
 function clickedBulkTreatButton() {
-  var treats = $('#bulk-treat-count').val();
+  // .val() always returns a string ("2"), so convert it to a number before doing math.
+  // Without Number(), weight + treats joined the text: 10 + "2" became "102" (HW10 debugging fix)
+  var treats = Number($('#bulk-treat-count').val());
   pet_info['weight'] = pet_info['weight'] + treats;
   pet_info['happiness'] = pet_info['happiness'] + treats * 5;
   pet_info['hunger'] = pet_info['hunger'] - treats * 5;
