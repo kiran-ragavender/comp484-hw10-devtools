@@ -15,7 +15,7 @@ Save each screenshot here with exactly this name (PNG). `../hw10-report.html` lo
 | 09-violation.png | Console (Verbose on): "[Violation] 'click' handler took ...ms" |
 | 10-filter-level.png | Default levels menu open, only Warnings + Errors checked |
 | 11-filter-text.png | Filter box: Koki |
-| 12-filter-regex.png | Filter box: `/(hungry|starving)/` |
+| 12-filter-regex.png | Filter box: the regex for "hungry" or "starving" (see Figure 12 in the report) |
 | 13-filter-source.png | Sidebar: devtools.js selected (or Filter box: url:devtools.js) |
 | 14-filter-user.png | Sidebar: "user messages" selected |
 | 15-bug-reproduced.png | Page: Koki at 102 pounds after Give treats (2) |
