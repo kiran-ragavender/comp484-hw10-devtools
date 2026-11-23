@@ -91,7 +91,8 @@ Violations are <i>Verbose</i> level messages, so I turned on <b>Verbose</b> in t
 <h2>3. Filtering Console Messages</h2>
 
 <h3>3a. Filter by log level</h3>
-<p>The <b>Default levels</b> menu shows or hides Verbose, Info, Warnings, and Errors. In this screenshot only Warnings and Errors are checked.</p>
+<p>The <b>Default levels</b> menu shows or hides Verbose, Info, Warnings, and Errors. Here only Warnings and Errors are checked.
+The menu label changes to "Custom levels", and the info messages are hidden (the toolbar counts them as hidden).</p>
 <figure><img src="screenshots/10-filter-level.png"><figcaption><b>Figure 10.</b> Log level filter: only warnings and errors are shown.</figcaption></figure>
 
 <h3>3b. Filter by text</h3>
@@ -104,8 +105,8 @@ Violations are <i>Verbose</i> level messages, so I turned on <b>Verbose</b> in t
 
 <h3>3d. Filter by message source</h3>
 <p>Under <b>Show console sidebar</b>, each URL group lists messages by the file that logged them. Selecting <code>devtools.js</code> shows only messages from that script.
-The Filter box also takes <code>url:devtools.js</code>, and <code>-url:</code> hides a source.
-I also used the <b>Hide network</b> setting to remove browser network messages like the 404.</p>
+The sidebar also lists <code>script.js</code>, <code>jquery-2.2.1.min.js</code>, and the network sources <code>favicon.ico</code> and <code>mochi.svg</code>.
+Typing <code>url:devtools.js</code> in the Filter box does the same thing, and <code>-url:</code> hides a source instead.</p>
 <figure><img src="screenshots/13-filter-source.png"><figcaption><b>Figure 13.</b> Messages filtered by source file.</figcaption></figure>
 
 <h3>3e. Filter by user messages</h3>
@@ -154,9 +155,10 @@ The happiness and hunger lines work because <code>*</code> converts the string t
 <h3>4f. Apply the fix and verify</h3>
 <p>The fix converts the input value to a number when it is read, so every line after it does real math:</p>
 <pre>var treats = Number($('#bulk-treat-count').val());</pre>
-<p>I edited the line in the Sources panel, saved it with Ctrl+S, and resumed the code. Then I made the same change in <code>script.js</code> in the repository.
-After reloading, giving 2 treats to Koki at 10 pounds shows <b>12 pounds</b>, which is correct.</p>
-<figure><img src="screenshots/20-fix-applied.png"><figcaption><b>Figure 20.</b> The fixed line in the Sources panel.</figcaption></figure>
+<p>I resumed the code and removed the breakpoint. Then I made the change in <code>script.js</code> and pushed it to GitHub.
+The Sources panel opens files loaded from a website as read-only unless Local Overrides is set up, so the fix went into the real file.
+After a hard reload, the Sources panel shows the fixed line. Giving 2 treats to Koki at 10 pounds now shows <b>12 pounds</b>, which is correct.</p>
+<figure><img src="screenshots/20-fix-applied.png"><figcaption><b>Figure 20.</b> The fixed line (line 146) in the Sources panel after reloading.</figcaption></figure>
 <figure><img src="screenshots/21-fix-verified.png"><figcaption><b>Figure 21.</b> Verified: weight goes from 10 to 12 after 2 treats.</figcaption></figure>
 
 <script>
