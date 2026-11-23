@@ -1,6 +1,31 @@
-# Giga Pets
+# HW10: Chrome DevTools (Giga Pets)
 
-**▶ Play it live: [https://kiran-ragavender.github.io/comp484-project2/](https://kiran-ragavender.github.io/comp484-project2/)**
+**▶ Live page: [https://kiran-ragavender.github.io/comp484-hw10-devtools/](https://kiran-ragavender.github.io/comp484-hw10-devtools/)**
+
+**📄 Write-up with screenshots: [assets/hw10-report.pdf](assets/hw10-report.pdf)**
+
+This repository is a copy of my COMP 484 Project 2 (Giga Pets) with Chrome DevTools examples added for HW10.
+The original Project 2 repository was not changed.
+
+## What was added
+
+| File | What it does |
+|---|---|
+| `devtools.js` | Console demos (`log`, `info`, `warn`, `error`, `table`, `group`, `%c` styling) and the triggers for browser-logged messages (404, TypeError, Violation) |
+| `script.js` | `logActionToConsole()` logs every game action at info, warn, or error level. `clickedBulkTreatButton()` is the debugging exercise. |
+| `index.html` / `style.css` | **DevTools Lab** panel under the game with one button per demo, plus the Bulk treats input |
+| `assets/hw10-report.pdf` | Explanations and labeled screenshots for every part of the assignment |
+
+## How to try it
+
+Open the live page, open DevTools (F12), and go to the **Console** tab. The console demos run on page load.
+Use the DevTools Lab buttons to trigger the others. To see the Violation message, turn on **Verbose** in the Default levels menu.
+
+---
+
+# Giga Pets (original Project 2 README)
+
+Original Project 2: [github.com/kiran-ragavender/comp484-project2](https://github.com/kiran-ragavender/comp484-project2)
 
 A virtual pet game built with HTML, CSS, JavaScript, and jQuery for COMP 484 Project 2.
 Take care of three pets: **Koki** (orange cat), **Kuro** (black cat), and **Coco** (Shiba Inu).

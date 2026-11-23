@@ -17,6 +17,7 @@ $(function() { // Makes sure that your function is called once all the DOM eleme
   $('.play-button').click(clickedPlayButton);
   $('.exercise-button').click(clickedExerciseButton);
   $('.feed-button').click(clickedFeedButton); // New action button
+  $('.bulk-treat-button').click(clickedBulkTreatButton); // HW10: DevTools debugging demo
   $('.sound-toggle').click(toggleSound);
 
   // Every few seconds every pet gets a bit hungrier, even when you are not clicking
@@ -134,6 +135,18 @@ function clickedExerciseButton() {
   pet_info['hunger'] = pet_info['hunger'] + 15;
   checkAndUpdatePetInfoInHtml();
   reactToAction('exercise');
+}
+
+// HW10 debugging demo: gives several treats at once using the number typed in the
+// "Bulk treats" box (in the DevTools Lab panel). Each treat adds 1 pound, 5 happiness,
+// and takes away 5 hunger.
+function clickedBulkTreatButton() {
+  var treats = $('#bulk-treat-count').val();
+  pet_info['weight'] = pet_info['weight'] + treats;
+  pet_info['happiness'] = pet_info['happiness'] + treats * 5;
+  pet_info['hunger'] = pet_info['hunger'] - treats * 5;
+  checkAndUpdatePetInfoInHtml();
+  reactToAction('treat');
 }
 
 // New behavior for the new Feed Meal button:
@@ -259,6 +272,8 @@ function passTime() {
 
   // Complain once when the current pet first becomes starving
   if (!wasStarving && pet_info['hunger'] >= MAX_HUNGER) {
+    // HW10: console.error() for the worst state in the game
+    console.error('[Giga Pets] ' + pet_info['name'] + ' is starving (hunger ' + pet_info['hunger'] + '/' + MAX_HUNGER + ')!');
     showPetMessage("I'm STARVING! Feed me a real meal!", true);
     playPetSound(true);
   }
@@ -286,10 +301,35 @@ function reactToAction(action) {
   showPetMessage(message, isWarning);
   bouncePet();
   playPetSound(isWarning);
+  logActionToConsole(action);
+}
+
+// HW10: writes every button press to the DevTools Console at the right log level.
+//   console.info()  -> normal update (the new stats after each action)
+//   console.warn()  -> the pet is getting into trouble (very hungry, unhappy, or no weight left)
+//   console.error() -> the pet is starving
+function logActionToConsole(action) {
+  console.info('[Giga Pets] ' + action + ' -> ' + pet_info['name'] +
+    ': weight ' + pet_info['weight'] +
+    ', happiness ' + pet_info['happiness'] +
+    ', hunger ' + pet_info['hunger']);
+
+  if (pet_info['hunger'] >= MAX_HUNGER) {
+    console.error('[Giga Pets] ' + pet_info['name'] + ' is starving (hunger ' + pet_info['hunger'] + '/' + MAX_HUNGER + ')!');
+  } else if (pet_info['hunger'] >= 75) {
+    console.warn('[Giga Pets] ' + pet_info['name'] + ' is very hungry (hunger ' + pet_info['hunger'] + '). Try Feed Meal.');
+  }
+  if (pet_info['weight'] === 0) {
+    console.warn('[Giga Pets] ' + pet_info['name'] + "'s weight hit 0 pounds.");
+  }
+  if (pet_info['happiness'] === 0) {
+    console.warn('[Giga Pets] ' + pet_info['name'] + ' is completely unhappy.');
+  }
 }
 
 // Visual notification: shows the pet's comment in the speech bubble above the picture
-// (used instead of alert() or console.log(), which the assignment doesn't allow)
+// (Project 2 didn't allow alert() or console.log() for this; HW10 adds console logging
+// separately in logActionToConsole() and devtools.js)
 function showPetMessage(text, isWarning) {
   $('.speech-bubble')
     // .finish() (jQuery unique method #1, explained in bouncePet below) instantly completes

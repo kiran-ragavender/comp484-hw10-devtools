@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HW10 Chrome DevTools: Giga Pets</title>
+<style>
+  @page { size: letter; margin: 0.6in; }
+  body { font: 11pt/1.45 "Segoe UI", Arial, sans-serif; color: #222; max-width: 7.3in; margin: 0 auto; }
+  h1 { font-size: 20pt; margin: 0 0 2px; }
+  .meta { color: #666; margin: 0 0 18px; }
+  h2 { font-size: 15pt; margin: 26px 0 6px; padding-bottom: 4px; border-bottom: 2px solid #e0742a; break-after: avoid; }
+  h3 { font-size: 12pt; margin: 18px 0 4px; break-after: avoid; }
+  p, li { margin: 4px 0; }
+  code { font: 9.5pt Consolas, monospace; background: #f4f0ec; padding: 1px 4px; border-radius: 3px; }
+  pre { font: 9pt/1.4 Consolas, monospace; background: #f4f0ec; padding: 8px 10px; border-radius: 4px; white-space: pre-wrap; break-inside: avoid; }
+  figure { margin: 8px 0 14px; break-inside: avoid; }
+  figure img { display: block; max-width: 100%; max-height: 5.2in; border: 1px solid #bbb; }
+  figcaption { font-size: 9.5pt; color: #555; margin-top: 4px; }
+  figcaption b { color: #b95a17; }
+  .missing { padding: 22px; border: 2px dashed #d33; color: #d33; font-weight: 600; text-align: center; }
+  table { border-collapse: collapse; font-size: 10pt; }
+  td, th { border: 1px solid #ccc; padding: 3px 8px; text-align: left; }
+</style>
+</head>
+<body>
+
+<h1>HW10: Chrome DevTools</h1>
+<p class="meta">Kiran Ragavender Shankar · COMP 484 · Built on a copy of Project 2 (Giga Pets)<br>
+Repository: https://github.com/kiran-ragavender/comp484-hw10-devtools ·
+Live page: https://kiran-ragavender.github.io/comp484-hw10-devtools/</p>
+
+<p>For this assignment I copied Project 2 (Giga Pets) into a new repository and added Chrome DevTools examples to it.
+I added a <b>DevTools Lab</b> panel under the game. Its buttons trigger each demo.
+The logging code is in two places. <code>script.js</code> logs real game events, such as each button press, a very hungry pet, or a starving pet.
+<code>devtools.js</code> has the console method demos and the code that makes the browser log a 404, a TypeError, and a Violation.</p>
+
+<!-- ============================================================ -->
+<h2>1. Console Message Logging</h2>
+
+<h3>1a. Log Info: <code>console.log()</code> / <code>console.info()</code></h3>
+<p>When the page loads, <code>runConsoleDemos()</code> logs how many pets were loaded with <code>console.log()</code>. It logs the selected pet with <code>console.info()</code>.
+Every game button also calls <code>logActionToConsole()</code>. It uses <code>console.info()</code> to log the pet's new weight, happiness, and hunger.</p>
+<pre>console.info('[Giga Pets] ' + action + ' -&gt; ' + pet_info['name'] + ': weight ' + pet_info['weight'] + ...);</pre>
+<figure><img src="screenshots/01-log-info.png"><figcaption><b>Figure 1.</b> Info messages: game loaded, selected pet, and a stats line after each button press.</figcaption></figure>
+
+<h3>1b. Log Warning: <code>console.warn()</code></h3>
+<p>A warning is logged on page load about how fast the pets get hungry. The game also logs one when a pet's hunger reaches 75, its weight hits 0, or its happiness hits 0.
+Chrome shows warnings with a yellow background and a stack trace you can expand.</p>
+<figure><img src="screenshots/02-log-warning.png"><figcaption><b>Figure 2.</b> Warnings from <code>console.warn()</code>, including "Koki is very hungry".</figcaption></figure>
+
+<h3>1c. Log Error: <code>console.error()</code></h3>
+<p>The game logs an error when the selected pet is starving (hunger 100), either after a button press or when hunger rises on its own in <code>passTime()</code>.
+The demo also logs one example error on load.</p>
+<figure><img src="screenshots/03-log-error.png"><figcaption><b>Figure 3.</b> Errors from <code>console.error()</code>, shown in red.</figcaption></figure>
+
+<h3>1d. Log Table: <code>console.table()</code></h3>
+<p>The <code>pets</code> array holds Pet objects. It is logged as a table that shows only the useful columns:</p>
+<pre>console.table(pets, ['name', 'species', 'weight', 'happiness', 'hunger']);</pre>
+<figure><img src="screenshots/04-log-table.png"><figcaption><b>Figure 4.</b> The pets array shown as a table, one row per pet.</figcaption></figure>
+
+<h3>1e. Log Group: <code>console.group()</code> / <code>console.groupEnd()</code></h3>
+<p>A "Pet report" group holds one group for each pet, with that pet's species, weight, happiness, hunger, and mood. Each <code>console.group()</code> is closed with <code>console.groupEnd()</code>.</p>
+<figure><img src="screenshots/05-log-group.png"><figcaption><b>Figure 5.</b> Nested groups. Each pet's group can be expanded or collapsed.</figcaption></figure>
+
+<h3>1f. Log Custom: CSS styling with <code>%c</code></h3>
+<p>Each <code>%c</code> applies the CSS string in the next argument to the text after it. Here it draws a two-color "Giga Pets / DevTools Lab" banner in the game's colors and font.</p>
+<pre>console.log('%c🐾 Giga Pets %c DevTools Lab ', 'background:#e0742a; color:white; ...', 'background:#3b2f2a; color:#ffe6cf; ...');</pre>
+<figure><img src="screenshots/06-log-custom.png"><figcaption><b>Figure 6.</b> Custom-styled console output.</figcaption></figure>
+
+<!-- ============================================================ -->
+<h2>2. Browser-Logged Messages</h2>
+
+<h3>2a. 404 Network Error</h3>
+<p><b>🚫 404: load new pet</b> fetches <code>images/mochi.svg</code> for a fourth pet, but that file doesn't exist.
+The <i>browser</i> logs <code>GET …/images/mochi.svg 404 (Not Found)</code>. Then my code logs its own <code>console.error()</code> with the status.</p>
+<figure><img src="screenshots/07-404.png"><figcaption><b>Figure 7.</b> The browser's 404 network message for the missing pet image.</figcaption></figure>
+
+<h3>2b. TypeError</h3>
+<p><b>💥 TypeError: find pet</b> looks for "Mochi" in <code>pets</code> with <code>.find()</code>. Mochi isn't there, so <code>.find()</code> returns <code>undefined</code>.
+Then the code reads <code>pet.name</code>. The error is left uncaught on purpose, so the browser logs
+<code>Uncaught TypeError: Cannot read properties of undefined (reading 'name')</code>.</p>
+<figure><img src="screenshots/08-typeerror.png"><figcaption><b>Figure 8.</b> Uncaught TypeError logged by the browser, with a link to devtools.js.</figcaption></figure>
+
+<h3>2c. Violation</h3>
+<p><b>🐢 Violation: slow click</b> runs a click handler that busy-waits for about 600 ms. This blocks the main thread.
+Chrome logs <code>[Violation] 'click' handler took ___ms</code>.
+Violations are <i>Verbose</i> level messages, so I turned on <b>Verbose</b> in the Default levels menu to see them.</p>
+<figure><img src="screenshots/09-violation.png"><figcaption><b>Figure 9.</b> Chrome's [Violation] message for the long-running click handler (Verbose level on).</figcaption></figure>
+
+<!-- ============================================================ -->
+<h2>3. Filtering Console Messages</h2>
+
+<h3>3a. Filter by log level</h3>
+<p>The <b>Default levels</b> menu shows or hides Verbose, Info, Warnings, and Errors. In this screenshot only Warnings and Errors are checked.</p>
+<figure><img src="screenshots/10-filter-level.png"><figcaption><b>Figure 10.</b> Log level filter: only warnings and errors are shown.</figcaption></figure>
+
+<h3>3b. Filter by text</h3>
+<p>Typing <code>Koki</code> in the Filter box hides every message that doesn't contain that text.</p>
+<figure><img src="screenshots/11-filter-text.png"><figcaption><b>Figure 11.</b> Text filter "Koki".</figcaption></figure>
+
+<h3>3c. Filter by regular expression</h3>
+<p>Text between slashes is read as a regular expression. <code>/(hungry|starving)/</code> keeps only messages about hunger problems.</p>
+<figure><img src="screenshots/12-filter-regex.png"><figcaption><b>Figure 12.</b> Regex filter <code>/(hungry|starving)/</code>.</figcaption></figure>
+
+<h3>3d. Filter by message source</h3>
+<p>Under <b>Show console sidebar</b>, each URL group lists messages by the file that logged them. Selecting <code>devtools.js</code> shows only messages from that script.
+The Filter box also takes <code>url:devtools.js</code>, and <code>-url:</code> hides a source.
+I also used the <b>Hide network</b> setting to remove browser network messages like the 404.</p>
+<figure><img src="screenshots/13-filter-source.png"><figcaption><b>Figure 13.</b> Messages filtered by source file.</figcaption></figure>
+
+<h3>3e. Filter by user messages</h3>
+<p>The sidebar's <b>user messages</b> entry shows only messages that came from page JavaScript calling the <code>console</code> API. Browser messages are hidden, such as the 404 network error, the Violation, and the uncaught TypeError.</p>
+<figure><img src="screenshots/14-filter-user.png"><figcaption><b>Figure 14.</b> Only user messages are shown.</figcaption></figure>
+
+<!-- ============================================================ -->
+<h2>4. JavaScript Debugging Workflow (Sources Panel)</h2>
+
+<p>I added a <b>Bulk treats</b> feature. You type how many treats to give (1–10) and press <b>🦴 Give treats</b>.
+Each treat should add 1 pound, 5 happiness, and take away 5 hunger.</p>
+<pre>function clickedBulkTreatButton() {
+  var treats = $('#bulk-treat-count').val();
+  pet_info['weight'] = pet_info['weight'] + treats;
+  pet_info['happiness'] = pet_info['happiness'] + treats * 5;
+  pet_info['hunger'] = pet_info['hunger'] - treats * 5;
+  ...
+}</pre>
+
+<h3>4a. Reproduce the bug</h3>
+<p>With Koki at 10 pounds, I gave 2 bulk treats. The weight should be 12, but the page shows <b>102 pounds</b>.
+Happiness and hunger change correctly, so the bug is only in the weight line.</p>
+<figure><img src="screenshots/15-bug-reproduced.png"><figcaption><b>Figure 15.</b> Bug: weight shows 102 instead of 12 after giving 2 treats.</figcaption></figure>
+
+<h3>4b. Sources panel and line-of-code breakpoint</h3>
+<p>In <b>Sources</b>, I opened <code>script.js</code> from the Page tree and clicked the line number of
+<code>pet_info['weight'] = pet_info['weight'] + treats;</code> to add a breakpoint.</p>
+<figure><img src="screenshots/16-breakpoint.png"><figcaption><b>Figure 16.</b> script.js in the Sources panel with a breakpoint on the weight line.</figcaption></figure>
+
+<h3>4c. Pause and inspect: Scope pane</h3>
+<p>Clicking <b>Give treats</b> again paused the code on the breakpoint. In the <b>Scope</b> pane, under Local, <code>treats</code> shows as <code>"2"</code> in quotes.
+It is a <i>string</i>, because jQuery's <code>.val()</code> always returns the input's text.</p>
+<figure><img src="screenshots/17-scope.png"><figcaption><b>Figure 17.</b> Scope pane: <code>treats = "2"</code> (a string).</figcaption></figure>
+
+<h3>4d. Pause and inspect: Watch expressions</h3>
+<p>I added the watch expressions <code>typeof treats</code> (shows <code>"string"</code>) and <code>pet_info['weight'] + treats</code> (shows <code>"102"</code>).
+They show that <code>+</code> is <i>joining</i> the two values as text instead of adding them.
+The happiness and hunger lines work because <code>*</code> converts the string to a number.</p>
+<figure><img src="screenshots/18-watch.png"><figcaption><b>Figure 18.</b> Watch expressions confirm the string joining.</figcaption></figure>
+
+<h3>4e. Pause and inspect: Console drawer</h3>
+<p>While the code was paused, I pressed <b>Esc</b> to open the Console drawer and ran expressions in the paused scope:
+<code>pet_info.weight + treats</code> → <code>"102"</code>, and <code>pet_info.weight + Number(treats)</code> → <code>12</code>. This confirmed the fix before I changed the file.</p>
+<figure><img src="screenshots/19-console-drawer.png"><figcaption><b>Figure 19.</b> Testing expressions in the Console drawer while paused.</figcaption></figure>
+
+<h3>4f. Apply the fix and verify</h3>
+<p>The fix converts the input value to a number when it is read, so every line after it does real math:</p>
+<pre>var treats = Number($('#bulk-treat-count').val());</pre>
+<p>I edited the line in the Sources panel, saved it with Ctrl+S, and resumed the code. Then I made the same change in <code>script.js</code> in the repository.
+After reloading, giving 2 treats to Koki at 10 pounds shows <b>12 pounds</b>, which is correct.</p>
+<figure><img src="screenshots/20-fix-applied.png"><figcaption><b>Figure 20.</b> The fixed line in the Sources panel.</figcaption></figure>
+<figure><img src="screenshots/21-fix-verified.png"><figcaption><b>Figure 21.</b> Verified: weight goes from 10 to 12 after 2 treats.</figcaption></figure>
+
+<script>
+  // Shows a red box in place of any screenshot that hasn't been added yet
+  document.querySelectorAll('figure img').forEach(function (img) {
+    function markMissing() {
+      var box = document.createElement('div');
+      box.className = 'missing';
+      box.textContent = 'Missing screenshot: assets/' + img.getAttribute('src');
+      img.replaceWith(box);
+    }
+    if (img.complete && img.naturalWidth === 0) markMissing();
+    else img.addEventListener('error', markMissing);
+  });
+</script>
+</body>
+</html>

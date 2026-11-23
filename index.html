@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="style.css">
     <!-- defer: script.js runs after the page (and jQuery below) has loaded -->
     <script src="script.js" defer></script>
+    <!-- HW10: Chrome DevTools console demos (runs after script.js) -->
+    <script src="devtools.js" defer></script>
   </head>
   <!-- data-pet is changed by script.js so the page colors match the selected pet -->
   <body data-pet="orange-cat">
@@ -82,6 +84,22 @@
         </div>
       </section>
     </main>
+
+    <!-- HW10: buttons that trigger each Console / Sources panel demo -->
+    <section class="devtools-lab" aria-label="DevTools Lab">
+      <h2>🛠️ DevTools Lab <span class="lab-tag">HW10 · open DevTools (F12) → Console</span></h2>
+      <div class="lab-row">
+        <button type="button" id="log-demo-btn">📋 Run console demos</button>
+        <button type="button" id="error-404-btn">🚫 404: load new pet</button>
+        <button type="button" id="type-error-btn">💥 TypeError: find pet</button>
+        <button type="button" id="violation-btn">🐢 Violation: slow click</button>
+      </div>
+      <div class="lab-row">
+        <label for="bulk-treat-count">Bulk treats</label>
+        <input id="bulk-treat-count" type="number" min="1" max="10" value="2">
+        <button type="button" class="bulk-treat-button">🦴 Give treats</button>
+      </div>
+    </section>
 
     <footer>Made with JavaScript &amp; jQuery</footer>
 
